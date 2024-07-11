@@ -53,7 +53,7 @@ function CashBook() {
     ]
 
     // inital inputs and othe to create form
-    const lastDate = data?.Data.extraData.LastCashBookDate ? data?.Data?.extraData?.LastCashBookDate : ""
+    const lastDate = data?.Data?.extraData?.LastCashBookDate ? data?.Data?.extraData?.LastCashBookDate : ""
     const Formik = {
         initialValues: {
             Date: lastDate ? lastDate : "",
