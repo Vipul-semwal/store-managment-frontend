@@ -56,7 +56,7 @@ function CashBook() {
     const lastDate = data?.Data.extraData.LastCashBookDate ? data?.Data.extraData.LastCashBookDate : ""
     const Formik = {
         initialValues: {
-            Date: lastDate,
+            Date: lastDate ? lastDate : "",
             ReceiptType: "",
             category: "",
             Ammount: "",
