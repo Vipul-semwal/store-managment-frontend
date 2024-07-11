@@ -21,7 +21,7 @@ function PurchaseRegister() {
     const [WhatToShow, SetWhatToShow] = useState("")
 
     // formik items state
-    const lastDate = data?.Data?.extraData?.LastPurchaseDate ? data.Data.extraData.LastPurchaseDate : ""
+    const lastDate = data?.Data?.extraData?.LastPurchaseDate ? data.Data?.extraData?.LastPurchaseDate : ""
     const [FormikItems, SetFormikItems] = useState({
         type: "",
         partyName: '',
