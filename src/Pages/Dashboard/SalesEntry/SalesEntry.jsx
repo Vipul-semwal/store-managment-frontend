@@ -126,7 +126,7 @@ function SalesEntry() {
             total: 0, // Initialize as number
             netPayable: 0, // Initialize as number
             discount: 0,
-            Date: lastDate,
+            Date: lastDate ? lastDate : "",
             BillNum: "",
             totalItem: "",
             Advance: 0

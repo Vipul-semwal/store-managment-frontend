@@ -28,7 +28,7 @@ function PurchaseRegister() {
         items: [],
         // mrp: 0,
         totalAmount: 0,
-        Date: lastDate,
+        Date: lastDate ? lastDate : "",
         BillNum: "",
         // EveryItemTotal: 0,
         totalItem: 0
