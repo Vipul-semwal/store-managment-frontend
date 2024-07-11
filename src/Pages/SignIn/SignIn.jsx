@@ -63,7 +63,7 @@ function SignIn() {
                 <svg viewBox="0 0 16 16" fill="#2e2e2e" height="16" width="16" xmlns="http://www.w3.org/2000/svg" className="inputIcon">
                     <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
                 </svg>
-                <input placeholder="confirm Password" id="password" className="inputField" type="password" name='confirmPassword' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.confirmPassword} />
+                <input placeholder="confirm Password" id="Confirm-password" className="inputField" type="password" name='confirmPassword' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.confirmPassword} />
                 {formik.errors.confirmPassword && formik.touched.confirmPassword ? (
                     <FormError message={formik.errors.confirmPassword} style={erroStyle} />
                 ) : (
