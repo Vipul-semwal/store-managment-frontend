@@ -1,0 +1,11 @@
+.sidebar {
+    background-color: black !important;
+    width: 20vw;
+    position: fixed;
+    left: 0;
+    height: 100%;
+}
+
+.container {
+    position: relative;
+}

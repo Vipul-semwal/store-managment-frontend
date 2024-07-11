@@ -1,0 +1,8 @@
+.PartieTable {
+    position: relative;
+}
+
+.partie-Table {
+    position: absolute;
+    width: 100%;
+}

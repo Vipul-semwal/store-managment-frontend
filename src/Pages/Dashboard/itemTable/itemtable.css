@@ -1,0 +1,13 @@
+.itemtable {
+    position: relative;
+}
+
+.item-table {
+    position: absolute;
+    width: 100%;
+}
+
+.dlt-card {
+    left: 50%;
+    position: absolute;
+}

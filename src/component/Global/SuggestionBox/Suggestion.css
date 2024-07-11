@@ -1,0 +1,51 @@
+.suggestion-card {
+    width: 190px;
+    height: 254px;
+    margin: 0 auto;
+    background-color: #023252;
+    border-radius: 10px;
+    z-index: 1;
+    /* border: 2px solid red; */
+}
+
+.suggestion-card h5 {
+    font-size: 17px;
+    color: rgb(248, 49, 49);
+    text-align: center;
+}
+
+.tools {
+    display: flex;
+    align-items: center;
+    padding: 9px;
+}
+
+.circle {
+    padding: 0 4px;
+}
+
+.box {
+    display: inline-block;
+    align-items: center;
+    width: 10px;
+    height: 10px;
+    padding: 1px;
+    border-radius: 50%;
+}
+
+.red {
+    background-color: #ff605c;
+}
+
+.yellow {
+    background-color: #ffbd44;
+}
+
+.green {
+    background-color: #00ca4e;
+}
+
+.card__content ul li {
+    color: #00ca4e;
+    font-size: 18px;
+}
