@@ -117,7 +117,7 @@ function SalesEntry() {
     }, [partyName])
 
     // inital values and data for form
-    const lastDate = data?.Data?.extraData?.LastSaleDate ? data?.Data.extraData.LastSaleDate : ""
+    const lastDate = data?.Data?.extraData?.LastSaleDate ? data?.Data?.extraData?.LastSaleDate : ""
     const Formik = {
         initialValues: {
             partyName: "",
