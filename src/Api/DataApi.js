@@ -463,6 +463,6 @@ class Data {
 
 }
 
-const dataApi = new Data('http://localhost:3003')
+const dataApi = new Data('https://store-management-backend-vjn4.onrender.com')
 
 export default dataApi

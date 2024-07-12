@@ -97,6 +97,6 @@ class Authentication {
 
 }
 
-const auth = new Authentication('http://localhost:3003');
+const auth = new Authentication('https://store-management-backend-vjn4.onrender.com');
 
 export default auth;
