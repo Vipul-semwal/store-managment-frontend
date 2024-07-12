@@ -11,6 +11,8 @@ const useformreq = () => {
         const result = await apiFunction(values)
         if (!result) {
             toast.error("something went wrong")
+            setLoading(false)
+            return
         }
         if (result.data.success === true) {
             if (redirectUrl) {
