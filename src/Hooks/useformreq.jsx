@@ -9,6 +9,9 @@ const useformreq = () => {
     const makeRequest = async (apiFunction, redirectUrl, values, extraFn) => {
         setLoading(true)
         const result = await apiFunction(values)
+        if (!result) {
+            toast.error("something went wrong")
+        }
         if (result.data.success === true) {
             if (redirectUrl) {
                 navigate(redirectUrl)
