@@ -94,9 +94,27 @@ class Authentication {
         }
     }
 
+    async AuthCheck() {
+        try {
+            const result = await axios.get(`${this.url}/auth-check`, {
+                withCredentials: true
+            })
+            return result
+        } catch (error) {
+            if (error.response) {
+                console.log("data", error.response)
+                return error.response
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+                return null
+            } else {
+                return null
+            }
+        }
+    }
 
 }
 
-const auth = new Authentication('https://store-management-backend-vjn4.onrender.com');
+const auth = new Authentication(import.meta.env.VITE_BASE_URL);
 
 export default auth;

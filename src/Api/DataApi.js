@@ -463,6 +463,6 @@ class Data {
 
 }
 
-const dataApi = new Data('https://store-management-backend-vjn4.onrender.com')
+const dataApi = new Data(import.meta.env.VITE_BASE_URL)
 
 export default dataApi

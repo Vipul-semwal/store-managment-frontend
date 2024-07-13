@@ -7,8 +7,11 @@ import './DashboardLayout.css'
 import { Sidebar } from '../../component/export';
 import { useEffect, useState } from 'react';
 import dataApi from '../../Api/DataApi';
+import auth from '../../Api/Authentication'
 import { toast } from 'react-toastify';
 import { createContext } from 'react';
+import Cookies from 'js-cookie';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const DashboardContext = createContext(null)
 
@@ -17,41 +20,73 @@ const DashboardLayout = () => {
     const [Reload, SetReload] = useState(true)
     const [Loading, SetLoading] = useState(false)
     const [isFresh, SetIsfresh] = useState(0)
+    const [isLogedIn, SetIslogedIn] = useState(false)
+    const navigate = useNavigate()
+    const location = useLocation();
 
     const reloadFunction = () => {
         SetReload(!Reload)
     }
 
+    //    verify jwt
+
     useEffect(() => {
         (async () => {
-            if (isFresh !== 2) {
-                SetLoading(true)
-            }
-            const result = await dataApi.GetUserData()
+            SetLoading(true)
+            const result = await auth.AuthCheck()
 
             if (result === null) {
-                toast.error('error fetching data')
-                SetLoading(false)
-                return
+                navigate('/login')
+                toast.error("can't accsess route right now!")
             }
             // console.log('hook', result)
             if (result?.status === 200) {
-                SetData(result.data.Data)
-                SetLoading(false)
+                (async () => {
+                    if (isFresh !== 2) {
+                        SetLoading(true)
+                    }
+                    const result = await dataApi.GetUserData()
+
+                    if (result === null) {
+                        toast.error('error fetching data')
+                        SetLoading(false)
+                        return
+                    }
+                    // console.log('hook', result)
+                    if (result?.status === 200) {
+                        SetData(result.data.Data)
+                        SetLoading(false)
+                    }
+                    else {
+                        toast.error('error fetching data please try again')
+                        SetLoading(false)
+                    }
+                }
+
+                )()
+                if (isFresh !== 2) {
+                    SetIsfresh((prev) => {
+                        return prev + 1
+                    })
+                }
             }
             else {
-                toast.error('error fetching data please try again')
-                SetLoading(false)
+                navigate('/login')
+                toast.error(result?.data?.message)
             }
         }
 
         )()
-        if (isFresh !== 2) {
-            SetIsfresh((prev) => {
-                return prev + 1
-            })
-        }
     }, [Reload])
+
+    // to redirect to hom dashboard
+    useEffect(() => {
+        const currentPath = location.pathname;
+        if (currentPath === '/dashboard') {
+            navigate('/dashboard/home');
+        }
+
+    }, []);
 
     if (Loading) {
         return (

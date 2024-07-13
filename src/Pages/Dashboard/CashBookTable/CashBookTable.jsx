@@ -100,7 +100,8 @@ function CashBookTable() {
 
     }
 
-    if (loading && RenderCount <= 2) {
+    const count = import.meta.env.VITE_MODE === "Production" ? 1 : 2
+    if (loading && RenderCount <= count) {
         return (
             <div className='text-danger text-center'>
                 loading...
