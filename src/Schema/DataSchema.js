@@ -29,8 +29,15 @@ const Purchaseschema = yup.object({
     type: yup.string().required(),
     Date: yup.string().required(),
     BillNum: yup.number().required(),
-    totalItem: yup.number().required('').min(1, ' must be at least 1').max(10, "max 10 items can be added in one time")
+    Added_item: yup.number().min(1, 'At least one item is required'),
 })
+
+const PurchaseitemSchemaForForm = yup.object({
+    itemName: yup.string().required('Item name is required'),
+    // unit: yup.string().required('Quantity is required'),
+    quantity: yup.number().required('quantity is required').min(1, 'quantity must be at least 1'),
+    rate: yup.number().required('rate is required')
+});
 
 const SaleItemSchema = yup.object().shape({
     itemName: yup.string().required("item name is required"),
@@ -43,15 +50,16 @@ const SaleItemSchema = yup.object().shape({
 const SalesSchema = yup.object({
     partyName: yup.string().required(),
     saleType: yup.string().required(),
-    items: yup.array().of(SaleItemSchema).min(1, 'At least one item is required'),
+    Added_item: yup.number().min(1, 'At least one item is required'),
     total: yup.number().required(),
-    netPayable: yup.number().required(),
-    discount: yup.number().required(),
     Date: yup.string().required(),
     BillNum: yup.string().min(10).max(10).required(),
-    totalItem: yup.number().required('').min(1, ' must be at least 1').max(10, "max 10 items can be added in one time")
 });
 
+const saleItemFormSchema = yup.object({
+    itemName: yup.string().required(),
+    quantity:  yup.number().required('').min(1, ' must be at least 1'),
+})
 const CashBookSchmema = yup.object({
     Date: yup.string().required(),
     ReceiptType: yup.string().required(),
@@ -77,4 +85,4 @@ const UnitSchema = yup.object({
     Name: yup.string().required()
 })
 
-export { ItemMasterSchema, PartiesSchema, Purchaseschema, SalesSchema, CashBookSchmema, intialAmountSchema, CategorySchmema, UnitSchema }
+export { ItemMasterSchema, PartiesSchema, Purchaseschema, SalesSchema, CashBookSchmema, intialAmountSchema, CategorySchmema, UnitSchema,saleItemFormSchema,PurchaseitemSchemaForForm }

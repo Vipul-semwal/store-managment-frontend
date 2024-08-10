@@ -5,12 +5,16 @@ import { useDashContext } from "../../../Hooks/ContextDashboard";
 import { useMemo, useEffect, useCallback, useState } from 'react';
 import useFetchdata from "../../../Hooks/useFetchData";
 import qs from 'qs'
-import { DateTime } from 'luxon'
-
+import { DateTime } from 'luxon';
+import CashBook from '../CashBook/CashBook';
+import {Button} from "../../../component/export";
+import {SideShow} from "../../../component/export";
+import './CashBookTable.css';
 function CashBookTable() {
     const { loading, res, MakeApiReq, Message } = useFetchdata()
     const [ShouldAppend, SetShouldAppend] = useState(false)
     const [RenderCount, SetRenderCount] = useState(0)
+    const [WhatToShow, SetWhatToShow] = useState("");
     const [Data, SetData] = useState({
         ReceiptType: '',
         // Ammount: '',
@@ -96,7 +100,7 @@ function CashBookTable() {
         loader: loading,
         title: "Load more",
         Message,
-        extraHeading: `Current Money:${data.Data.AmmountInStore}`
+        extraHeading: `Current Money:${data?.Data?.AmmountInStore || 0}`
 
     }
 
@@ -109,11 +113,26 @@ function CashBookTable() {
         )
     }
     return (
-        <div className='mw-100'>
-            <Filter inputs={inputs} Data={Data} Setter={SetData} ShouldAppend={SetShouldAppend} />
+        <div className='mw-100 cashbook-table-container'>
+           <div className={`CashBook-wraper ${WhatToShow?'blurred':""}`}>
+           <Filter inputs={inputs} Data={Data} Setter={SetData} ShouldAppend={SetShouldAppend} />
+           <div className="add-new-purchase-entry-btn mb-3">
+       <Button title={"Add new"} onclick={()=>{
+        SetWhatToShow("CashBook");
+       }}/>
+       </div>
             <div className="">
                 <Table data={res} columns={columns} extra={extra} />
             </div>
+           </div>
+           <div className="CashBook-entry">
+        <SideShow
+                  whatName={"CashBook"}
+                  CMP1={<CashBook />}
+                  WhatToShow={WhatToShow}
+                  SetWhatToShow={SetWhatToShow}
+                />
+        </div>
         </div>
     )
 }

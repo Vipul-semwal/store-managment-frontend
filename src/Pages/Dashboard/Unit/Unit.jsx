@@ -16,7 +16,7 @@ function Unit() {
 
     },
     validationSchema: UnitSchema,
-    extrafn: data.reloadFunction,
+    extrafn: data?.reloadFunction,
     onSubmit: () => {
       return dataApi.CreateUnit.bind(dataApi)
     }

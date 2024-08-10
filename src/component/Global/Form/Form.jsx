@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Form.css'
 import Select from 'react-select'
 import { useFormik } from 'formik';
@@ -12,7 +12,6 @@ import { array } from 'yup';
 
 function Form({ inputs, extra, Formik }) {
     // console.log('seeformk', Formik.initialValues.items);
-    // console.log('input', inputs, "values", Formik.initialValues.items);
 
     const { loading, makeRequest } = useformreq()
     const [Reload, SetReload] = useState(false)
@@ -22,14 +21,27 @@ function Form({ inputs, extra, Formik }) {
         validationSchema: Formik.validationSchema,
         enableReinitialize: true,
         onSubmit: (values) => {
-            // console.log('fromikjsx', Formik.extrafn)
             console.log('value', values)
+            // the if condition if the form is just bing used to extract values not to submit
+            if(Formik.isutlityform){
+                console.log('utlilityformn working')
+                Formik.utlityformFn(values)
+                return
+            }
+           else{
             makeRequest(Formik.onSubmit(), Formik.Redirect, values, Formik.extrafn)
+           }
         }
 
     })
 
     const errorStyle = { color: 'red', fontSize: '13px', }
+
+    useEffect(()=>{
+     if(Formik.passFormikRef){
+        Formik.SetFormikRef(formik)
+     }
+    },[formik.values])
 
     return (
         <div className="card data-collection">
@@ -87,7 +99,7 @@ function Form({ inputs, extra, Formik }) {
                                                             onBlur={formik.handleBlur}
                                                             value={i.options.find((option) => option.value === formik.values[name])}
                                                         />
-                                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>add new</button></div>}
+                                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>{i.addBtnTxt?i.addBtnTxt:'add new'}</button></div>}
                                                         <NestendValueError
                                                             formik={formik}
                                                             propName={i.PropName}
@@ -132,7 +144,7 @@ function Form({ inputs, extra, Formik }) {
                                                             onBlur={formik.handleBlur}
                                                             value={i.options.find((option) => option.value === formik.values[name])}
                                                         />
-                                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>add new</button></div>}
+                                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>{i.addBtnTxt?i.addBtnTxt:'add new'}</button></div>}
                                                         <NestendValueError
                                                             formik={formik}
                                                             propName={i.PropName}
@@ -167,6 +179,7 @@ function Form({ inputs, extra, Formik }) {
                                             value={formik.values[name]}
                                             readOnly={i.readOnly}
                                         />
+                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>{i.addBtnTxt?i.addBtnTxt:'add new'}</button></div>}
                                         {formik.errors[i.name] && formik.touched[i.name] ? (
                                             <FormError message={formik.errors[i.name]} style={errorStyle} />
                                         ) : null}
@@ -181,7 +194,7 @@ function Form({ inputs, extra, Formik }) {
                                             onBlur={formik.handleBlur}
                                             value={{ value: formik.values[name], label: formik.values[name] }}
                                         />
-                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>add new</button></div>}
+                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>{i.addBtnTxt?i.addBtnTxt:'add new'}</button></div>}
                                         {
                                             formik.errors[i.name] && formik.touched[i.name] ? (
                                                 <FormError message={formik.errors[i.name]} style={errorStyle} />
@@ -202,6 +215,7 @@ function Form({ inputs, extra, Formik }) {
                                             }}
                                             onBlur={formik.handleBlur}
                                         />
+                                          {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>{i.addBtnTxt?i.addBtnTxt:'add new'}</button></div>}
                                         {formik.errors[i.name] && formik.touched[i.name] ? (
                                             <FormError message={formik.errors[i.name]} style={errorStyle} />
                                         ) : null}
@@ -218,7 +232,7 @@ function Form({ inputs, extra, Formik }) {
                                             onBlur={formik.handleBlur}
                                             value={i.options.find((option) => option.value === formik.values[name])}
                                         />
-                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>add new</button></div>}
+                                        {i.addnewbtn && <div className='addnewbtndiv'><button className='addnewbtn mt-2' name={i.name} onClick={i.addnewFnc}>{i.addBtnTxt?i.addBtnTxt:'add new'}</button></div>}
                                         {formik.errors[i.name] && formik.touched[i.name] ? (
                                             <FormError message={formik.errors[i.name]} style={errorStyle} />
                                         ) : null}

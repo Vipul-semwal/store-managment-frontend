@@ -7,6 +7,10 @@ import { useDashContext } from '../../../Hooks/ContextDashboard'
 import { useMemo, useEffect, useCallback } from 'react'
 import useFetchdata from '../../../Hooks/useFetchData'
 import qs from 'qs'
+import {Button} from '../../../component/export'
+import PurchaseRegister from '../PurchaseRegister/PurchaseRegister'
+import {SideShow} from '../../../component/export'
+import './PurchaseTable.css';
 
 function PurchaseTable() {
     const { loading, res, MakeApiReq, Message } = useFetchdata()
@@ -95,7 +99,8 @@ function PurchaseTable() {
             footer: 'totalAmount'
         }
     ]
-
+    
+    const [WhatToShow, SetWhatToShow] = useState("");
     const [pageNo, SetPageNo] = useState(1)
     const extra = {
         pageNo,
@@ -128,10 +133,25 @@ function PurchaseTable() {
     }
 
     return (
-        <div>
+      <div className="purchase-table-container">
+          <div className={`purhchase-table-wraper ${WhatToShow?'blurred':""}`}>
             <Filter inputs={inputs} Data={Data} Setter={SetData} ShouldAppend={SetShouldAppend} />
+            <div className="add-new-purchase-entry-btn mb-3">
+       <Button title={"Add new"} onclick={()=>{
+        SetWhatToShow("Purchase-entry");
+       }}/>
+       </div>
             <Table data={res} columns={columns} extra={extra} />
         </div>
+        <div className="purchase-entry">
+        <SideShow
+                  whatName={"Purchase-entry"}
+                  CMP1={<PurchaseRegister />}
+                  WhatToShow={WhatToShow}
+                  SetWhatToShow={SetWhatToShow}
+                />
+        </div>
+      </div>
     )
 }
 

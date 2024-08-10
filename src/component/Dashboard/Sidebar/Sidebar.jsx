@@ -16,37 +16,37 @@ const Sidebar = () => {
             title: 'Cash Book',
         }
         ,
-        {
-            path: '/dashboard/item-master',
-            icon: <BsInboxFill className="fs-4" />,
-            title: 'Add item',
-        }
-        ,
+        // {
+        //     path: '/dashboard/item-master',
+        //     icon: <BsInboxFill className="fs-4" />,
+        //     title: 'Add item',
+        // }
+        // ,
 
-        {
-            path: '/dashboard/add-partie',
-            icon: <BsPersonLinesFill className="fs-4" />,
-            title: 'New Partie',
-        }
-        ,
-        {
-            path: '/dashboard/purchase-entry',
-            icon: <BsFillCartCheckFill className="fs-4" />,
-            title: 'Purchase Entry',
-        }
-        ,
-        {
-            path: '/dashboard/sale-entry',
-            icon: <BsTagFill className='fs-4' />,
-            title: 'Sales Entry',
-        }
-        ,
-        {
-            path: '/dashboard/cash-book',
-            icon: <BsKanban className='fs-4' />,
-            title: 'Cash Book Entry',
-        }
-        ,
+        // {
+        //     path: '/dashboard/add-partie',
+        //     icon: <BsPersonLinesFill className="fs-4" />,
+        //     title: 'New Partie',
+        // }
+        // ,
+        // {
+        //     path: '/dashboard/purchase-entry',
+        //     icon: <BsFillCartCheckFill className="fs-4" />,
+        //     title: 'Purchase Entry',
+        // }
+        // ,
+        // {
+        //     path: '/dashboard/sale-entry',
+        //     icon: <BsTagFill className='fs-4' />,
+        //     title: 'Sales Entry',
+        // }
+        // ,
+        // {
+        //     path: '/dashboard/cash-book',
+        //     icon: <BsKanban className='fs-4' />,
+        //     title: 'Cash Book Entry',
+        // }
+        // ,
         {
             path: '/dashboard/create-category',
             icon: <BsUiChecksGrid className="fs-4" />,
@@ -60,7 +60,7 @@ const Sidebar = () => {
         {
             path: '/dashboard/item-table',
             icon: <BsGrid3X3 className="fs-4" />,
-            title: 'Item table'
+            title: 'Item Register'
         },
         {
             path: '/dashboard/partie-table',

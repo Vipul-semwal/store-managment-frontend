@@ -51,7 +51,7 @@ function OutOfStock() {
     }
     return (
         <div>
-            <Table data={FindOutOfStock(data.Data.items)} columns={columns} extra={extra} />
+            <Table data={FindOutOfStock(data?.Data?.items || [])} columns={columns} extra={extra} />
         </div>
     )
 }

@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import dataApi from '../../../Api/DataApi';
 import DeleteCard from '../../../component/Global/DeleteCard/DeleteCard';
 import './partieTable.css'
+import {Button} from '../../../component/export';
+import PartieRegister from '../PartieRegister/PartieRegister';
+import {SideShow} from '../../../component/export';
 
 function PartieTable() {
     const columns = [
@@ -60,7 +63,8 @@ function PartieTable() {
         SetPageNo,
         heading: 'Parties Table'
     }
-
+    
+    const [WhatToShow, SetWhatToShow] = useState("");
     const [showDeleteCard, setShowDeleteCard] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState(null);
 
@@ -85,7 +89,13 @@ function PartieTable() {
     }
 
     return (
-        <div className='PartieTable'>
+      <div className="partie-table-container">
+       <div className="add-new-partie-btn mb-3">
+       <Button title={"Add new"} onclick={()=>{
+        SetWhatToShow("partyName");
+       }}/>
+       </div>
+          <div className='PartieTable'>
             <div className='partie-Table'>
                 <Table data={data?.Data.parties || []} columns={columns} extra={extra} />
             </div>
@@ -97,6 +107,15 @@ function PartieTable() {
                 }
             </div>
         </div>
+        <div className="partie-entry">
+        <SideShow
+                  whatName={"partyName"}
+                  CMP1={<PartieRegister />}
+                  WhatToShow={WhatToShow}
+                  SetWhatToShow={SetWhatToShow}
+                />
+        </div>
+      </div>
 
 
     )

@@ -1,0 +1,21 @@
+.purchase-form-container{
+    /* border: 2px solid red; */
+    position: relative;
+    width: 374px;
+}
+
+.purchase-form{
+ /* position: absolute; */
+
+}
+
+.purchas-side-show1{
+   position: absolute;
+   top: 0%;
+   left: 20%;
+
+}
+
+.table-container-purchase{
+    position: absolute;
+}

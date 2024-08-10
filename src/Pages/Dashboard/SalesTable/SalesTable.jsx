@@ -6,8 +6,12 @@ import { Makeoptions } from '../../../utility/Makeoptions'
 import { useDashContext } from '../../../Hooks/ContextDashboard'
 import { useMemo, useEffect, useCallback, useState } from 'react'
 import useFetchdata from '../../../Hooks/useFetchData'
-import qs from 'qs'
-import { DateTime } from 'luxon'
+import qs from 'qs';
+import { DateTime } from 'luxon';
+import SalesEntry from '../SalesEntry/SalesEntry';
+import {Button} from '../../../component/export';
+import {SideShow} from '../../../component/export';
+import './SaleTable.css';
 function SalesTable() {
     const { loading, res, MakeApiReq, Message } = useFetchdata()
     const [ShouldAppend, SetShouldAppend] = useState(false)
@@ -31,8 +35,8 @@ function SalesTable() {
         MakeApiReq(dataApi.GetSalesData.bind(dataApi), qs.stringify(Query), ShouldAppend)
     }, [Query])
     const data = useDashContext()
-    const partyName = useMemo(() => Makeoptions(data?.Data.parties || [], 'Name'), [data.Data.parties]);
-    const itemName = useMemo(() => Makeoptions(data?.Data.items || [], 'itemName'), [data.Data.items]);
+    const partyName = useMemo(() => Makeoptions(data?.Data.parties || [], 'Name'), [data?.Data?.parties]);
+    const itemName = useMemo(() => Makeoptions(data?.Data.items || [], 'itemName'), [data?.Data?.items]);
 
 
     // for filter inputs
@@ -104,7 +108,7 @@ function SalesTable() {
             // cell: info => DateTime.fromISO(info.getValue()).toLocaleString(DateTime.DATE_MED)
         }
     ]
-
+    const [WhatToShow, SetWhatToShow] = useState("");
     const [pageNo, SetPageNo] = useState(1)
 
     // some extra things for the table and also the laod more button increment in the data object
@@ -139,10 +143,25 @@ function SalesTable() {
     }
 
     return (
-        <div className='mw-100'>
+        <div className='mw-100 sale-table-container'>
             {/* {filter actuly just add to data object if user wants to add some filter} */}
-            <Filter inputs={inputs} Data={Query} Setter={SetQuery} ShouldAppend={SetShouldAppend} />
-            <Table data={res} columns={columns} extra={extra} />
+          <div className={`sale-table-wraper ${WhatToShow?'blurred':""}`}>
+          <Filter inputs={inputs} Data={Query} Setter={SetQuery} ShouldAppend={SetShouldAppend} />
+          <div className="add-new-purchase-entry-btn mb-3">
+       <Button title={"Add new"} onclick={()=>{
+        SetWhatToShow("sale-entry");
+       }}/>
+       </div>
+          <Table data={res} columns={columns} extra={extra} />
+          </div>
+          <div className="sale-entry">
+        <SideShow
+                  whatName={"sale-entry"}
+                  CMP1={<SalesEntry />}
+                  WhatToShow={WhatToShow}
+                  SetWhatToShow={SetWhatToShow}
+                />
+        </div>
         </div>
     )
 }

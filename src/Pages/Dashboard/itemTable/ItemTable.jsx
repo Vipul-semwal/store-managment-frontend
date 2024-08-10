@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 import dataApi from '../../../Api/DataApi';
 import DeleteCard from '../../../component/Global/DeleteCard/DeleteCard';
 import './itemtable.css'
-
+import {Button} from '../../../component/export';
+import ItemMaster from '../ItemMaster/ItemMaster';
+import {SideShow} from '../../../component/export';
 function ItemTable() {
     const columns = [
         {
@@ -61,7 +63,8 @@ function ItemTable() {
         SetPageNo,
         heading: 'item Table'
     }
-
+    
+    const [WhatToShow, SetWhatToShow] = useState("");
     const [showDeleteCard, setShowDeleteCard] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState(null);
 
@@ -85,7 +88,14 @@ function ItemTable() {
         }
     }
     return (
-        <div className='itemtable'>
+       <div className="item-table-container">
+        
+         <div className="add-new-item-btn mb-3">
+       <Button title={"Add new"} onclick={()=>{
+        SetWhatToShow("item-entry");
+       }}/>
+       </div>
+         <div className='itemtable'>
             <div className='item-table'>
                 <Table data={data?.Data?.items || []} columns={columns} extra={extra} />
             </div>
@@ -95,6 +105,15 @@ function ItemTable() {
                 </div> : null
             }
         </div>
+        <div className="partie-entry">
+        <SideShow
+                  whatName={"item-entry"}
+                  CMP1={<ItemMaster />}
+                  WhatToShow={WhatToShow}
+                  SetWhatToShow={SetWhatToShow}
+                />
+        </div>
+       </div>
     )
 }
 

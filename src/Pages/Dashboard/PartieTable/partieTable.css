@@ -6,3 +6,20 @@
     position: absolute;
     width: 100%;
 }
+
+.PartieTable{
+    /* position: absolute; */
+    /* z-index: 100; */
+    /* border: 2px solid red; */
+}
+
+.partie-entry{
+    position: absolute;
+    /* z-index: 10; */
+    top: -1%;
+    left:45%;
+}
+
+.partie-table-container{
+    /* position: relative; */
+}

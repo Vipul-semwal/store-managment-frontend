@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import dataApi from '../../../Api/DataApi'
 import { Form } from '../../../component/export'
-import { SalesSchema } from '../../../Schema/DataSchema'
+import { SalesSchema,saleItemFormSchema } from '../../../Schema/DataSchema'
 import { Makeoptions } from '../../../utility/Makeoptions'
 import { useDashContext } from '../../../Hooks/ContextDashboard'
 import { useMemo } from 'react'
 import { PartieRegister, ItemMaster } from '../../export'
 import { SideShow } from '../../../component/export'
 import { toast } from 'react-toastify';
+import './saleEntry.css'
+import {Table} from '../../../component/export'
+import {MdDelete } from 'react-icons/md';
+import {handleDeleteClick,utlityformFn} from '../../../utility/sharedUtils'
 
 function SalesEntry() {
     const data = useDashContext()
@@ -15,18 +19,34 @@ function SalesEntry() {
     const partyName = useMemo(() => {
         console.log("Recomputing partyName options");
         return Makeoptions(data?.Data.parties || [], 'Name');
-    }, [data.Data.parties]);
+    }, [data.Data?.parties]);
+
     const itemName = useMemo(() => Makeoptions(data?.Data.items || [], 'itemName'), [data.Data]);
 
-    const SaleTypeOption = [{ value: 'Cash', label: 'Cash' }, { value: 'Credit', label: 'Credit' }]
-
-    const [SaleType, SetSaleType] = useState(null)
+    // ref to main form formik obj
+    const [FormikRef,SetFormikRef] = useState('');
+         
+    const [SaleType, SetSaleType] = useState(null);
 
     // sideshow mager state
-    const [WhatToShow, SetWhatToShow] = useState("")
+    const [WhatToShow, SetWhatToShow] = useState("");
+    
+    // state for manuplating inputs
+    const [inputs, SetInputs] = useState([]);
 
-    const modeOfPaymentOptions = [{ value: 'Cash', label: 'Cash' }, { value: 'Online', label: 'Online' }]
+    const SaleTypeOption = [{ value: 'Cash', label: 'Cash' }, { value: 'Credit', label: 'Credit' }];
 
+    const modeOfPaymentOptions = [{ value: 'Cash', label: 'Cash' }, { value: 'Online', label: 'Online' }];
+    // Advance ammount collect feild input
+    const AdvanceFeild = {
+        inputType: 'normal',
+        type: 'number',
+        label: 'Advance',
+        name: `Advance`,
+    };
+
+    const advanceField = SaleType === "Credit" ? AdvanceFeild : null;
+    
     // default inputs 
     const initalnewInputs = [
         {
@@ -65,59 +85,72 @@ function SalesEntry() {
                 SetWhatToShow(e.target.name);
             },
         },
+        // {
+        //     inputType: 'logicNormal',
+        //     type: 'Number',
+        //     label: 'No of Items',
+        //     name: 'totalItem',
+        //     onChange: (e, formik) => {
+        //         formik.handleChange(e);
+        //         // will generate the fields after setting value in formik
+        //         CreateObjectTemplet(e.target.value, formik);
+        //     },
+        // },
+        {
+            inputType: 'normal',
+            type: 'text',
+            label: 'total',
+            name: 'total',
+            readOnly: true,
+        },
         {
             inputType: 'logicNormal',
             type: 'Number',
-            label: 'No of Items',
-            name: 'totalItem',
+            label: 'discount',
+            name: 'discount',
             onChange: (e, formik) => {
-                formik.handleChange(e);
-                // will generate the fields after setting value in formik
-                CreateObjectTemplet(e.target.value, formik);
+                formik.handleChange(e)
+                console.log(formik.values.netPayable)
+                formik.setFieldValue('netPayable', formik.values.total - e.target.value);
+            }
+
+        },
+        {
+            inputType: 'normal',
+            type: 'text',
+            label: 'netPayable',
+            name: 'netPayable',
+            readOnly: true,
+        },
+        {
+            inputType: 'normal',
+            type: 'number',
+            label: 'Added item',
+            name: 'Added_item',
+            readOnly: true,
+            addnewbtn: true,
+            addBtnTxt:"add item",
+            addnewFnc: (e) => {
+                e.preventDefault();
+                SetWhatToShow(e.target.name);
             },
-        }
+        },
+        advanceField
     ];
-
-    // Advance ammount collect feild input
-    const AdvanceFeild = {
-        inputType: 'normal',
-        type: 'number',
-        label: 'Advance',
-        name: `Advance`,
-    }
-
-    // state for manuplating inputs
-    const [inputs, SetInputs] = useState([])
 
     // rendring inital feilds and deciding what kinf of  partyname and Advance feild based on saletype
     useEffect(() => {
-        SetInputs((prev) => {
-            if (prev.length > 5) {
-                let restOftheArr = prev[prev.length - 1]?.name === "Advance" ? prev.slice(5, prev.length - 1) : prev.slice(5)
-                const advanceField = SaleType === "Credit" ? AdvanceFeild : null
-                return [...initalnewInputs, ...restOftheArr, advanceField]
-            }
-            else {
-                return [...initalnewInputs]
-            }
-        })
-    }, [SaleType]);
+        SetInputs([...initalnewInputs])
+    }, [SaleType,FormikRef.values?.items]);
 
     // re rendring if new parites get added real time
     useEffect(() => {
-        SetInputs((prev) => {
-            if (prev.length > 5) {
-                let restOftheArr = prev.slice(5)
-                return [...initalnewInputs, ...restOftheArr]
-            }
-            else {
-                return [...initalnewInputs]
-            }
-        })
+        SetInputs([...initalnewInputs])
     }, [partyName])
 
     // inital values and data for form
     const lastDate = data?.Data?.extraData?.LastSaleDate ? data?.Data?.extraData?.LastSaleDate : ""
+
     const Formik = {
         initialValues: {
             partyName: "",
@@ -129,14 +162,17 @@ function SalesEntry() {
             Date: lastDate ? lastDate : "",
             BillNum: "",
             totalItem: "",
-            Advance: 0
+            Advance: 0,
+            Added_item:0
 
         },
         validationSchema: SalesSchema,
         extrafn: data.reloadFunction,
         onSubmit: () => {
             return dataApi.SalesEntry.bind(dataApi)
-        }
+        },
+        passFormikRef:true,
+        SetFormikRef
 
 
     }
@@ -296,13 +332,185 @@ function SalesEntry() {
 
 
     }
+
+    // <<<<<<<<<the item adding form data>>>>>>>>>>>>>
+    // const utlityformFn = (values,formik)=>{
+    //     console.log("lund hi chut hain",values,FormikRef.values.total)
+    //     let lastItemsArrValue = FormikRef.values.items;
+    //     let lastTotal = FormikRef.values.total;
+    //     let currentTotal = values.Mrp*values.quantity
+    //     let Lastnetpay = FormikRef.values.netPayable
+    //     let lastItemCount = FormikRef.values.Added_item
+    //     console.log('damnn',currentTotal,lastTotal)
+
+    //     FormikRef.setFieldValue('items',[...lastItemsArrValue,{...values,index:lastItemsArrValue.length}])
+    //     FormikRef.setFieldValue('total',lastTotal+currentTotal)
+    //     FormikRef.setFieldValue('netPayable',Lastnetpay+currentTotal)
+    //     FormikRef.setFieldValue('Added_item',lastItemCount+1)
+
+    //     SetWhatToShow(false)
+    //    }
+
+    const ItemFormikData = {
+        initialValues: {
+            itemName:"",
+            unit: "",
+            currentStock: 0,
+            Mrp: 0, // Initialize as number
+            quantity: 0, // Initialize as number
+        },
+        validationSchema: saleItemFormSchema,
+        isutlityform:true,
+        utlityformFn:(values)=>{
+            utlityformFn(values,FormikRef,{SetWhatToShow,type:"sale"})
+        }
+        
+    }
+
+    const ItemFormExtra = {
+        heading: 'new item',
+        btnTitle: "Add"
+    }
+
+    const ItemFormInputs =  [
+        {
+            inputType: 'logicSelect',
+            type: 'text',
+            label: 'Item Name',
+            name: `itemName`,
+            options: itemName,
+            title: "itemName",
+            PropName: "items",
+            onChange: (option, formik) => {
+                console.log(option.value)
+
+                formik.setFieldValue(`itemName`, option.value)
+                const { unit, quantity, Mrp
+                } = data.Data.items.find((i) => {
+                    return i.itemName === option.value
+                })
+
+                formik.setFieldValue(`unit`, unit)
+                formik.setFieldValue(`currentStock`, quantity)
+                formik.setFieldValue(`Mrp`, Mrp)
+            }
+        },
+        {
+            inputType: 'normal',
+            type: 'text',
+            label: 'unit',
+            name: `unit`,
+            readOnly: true,
+            title: "unit",
+            PropName: "items",
+        },
+        {
+            inputType: 'normal',
+            type: 'number',
+            label: 'currentStock',
+            name: `currentStock`,
+            readOnly: true,
+            title: "currentStock",
+            PropName: "items",
+        },
+        {
+            inputType: 'normal',
+            type: 'Number',
+            label: 'Mrp',
+            name: `Mrp`,
+            readOnly: true,
+            title: "Mrp",
+            PropName: "items",
+        }
+        ,
+        {
+            inputType: 'logicNormal',
+            type: 'Number',
+            label: 'quantity',
+            name: `quantity`,
+            onChange: (e, formik) => {
+                if (+e.target.value > formik.values.currentStock) {
+                    toast.warn("cant`t sell more than current stock")
+                    return
+                }
+                formik.handleChange(e)
+                let Rate = formik.values.Mrp;
+                let Lastquantity = formik.values.quantity
+                let CurrentAmount = formik.values.total
+
+            },
+            title: "quantity",
+            PropName: "items",
+        }
+    ]
+
+    // <<<<table data >>>>
+
+    const columns = [
+        {
+            header: 'Name',
+            accessorKey: 'itemName'
+        },
+        {
+            header: 'unit',
+            accessorKey: 'unit',
+        },
+        {
+            header: 'currentStock',
+            accessorKey: 'currentStock',
+        },
+        {
+            header: 'Mrp',
+            accessorKey: 'Mrp',
+        },
+        {
+            header: 'quantity',
+            accessorKey: 'quantity',
+        },
+        {
+            header: 'Delete',
+            cell: ({ row }) => {
+                return (
+                    <button onClick={() => handleDeleteClick(row.original.index,FormikRef,{type:'sale'})}>
+                        <MdDelete />
+                    </button>
+                );
+            }
+        }
+    ]
+    const [pageNo, SetPageNo] = useState(1)
+    const TableExtra = {
+        pageNo,
+        SetPageNo,
+        heading: 'Added Items'
+    }
+
     return (
-        <div className='d-flex'>
-            <div>
-                <Form extra={extra} inputs={inputs} Formik={Formik} />
+        <div className="container">
+        <div className="row">
+          <div className="col-md-6 col-sm-3 low-wraper">
+            <div className="sale-entry-form">
+              <Form extra={extra} inputs={inputs} Formik={Formik} />
             </div>
-            <SideShow whatName={"partyName"} CMP1={<PartieRegister />} CMP2={<ItemMaster />} WhatToShow={WhatToShow} SetWhatToShow={SetWhatToShow} />
+            {WhatToShow && (
+              <div className="sale-entry-partieR">
+                <SideShow
+                  whatName={"partyName"}
+                  CMP1={<PartieRegister />}
+                  CMP2={<Form extra={ItemFormExtra} inputs={ItemFormInputs} Formik={ItemFormikData} />}
+                  WhatToShow={WhatToShow}
+                  SetWhatToShow={SetWhatToShow}
+                />
+              </div>
+            )}
+          </div>
+          <div className="col-md-6 col-sm-12 sale-item-table">
+            <div className="sale-entry-table-cotnainer">
+            <Table data={FormikRef.values?.items || []} columns={columns} extra={TableExtra} />
+            </div>
+          </div>
         </div>
+      </div>
     )
 }
 
